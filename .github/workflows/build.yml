@@ -1,4 +1,4 @@
-name: Build Java Cooldown Animation
+name: Build Java Combat Animation
 
 on:
   push:
@@ -52,20 +52,23 @@ jobs:
 
       - name: Package levipack
         run: |
-          mkdir -p pkg/config
+          test -f JavaCombatAnimation_Resources.zip || { echo "::error::JavaCombatAnimation_Resources.zip is missing from the repo"; exit 1; }
+          mkdir -p pkg
           cp manifest.json pkg/
           cp build/android/out/$ABI/libjava_cooldown_animation.so pkg/
-          ./build/host/jca_config_gen pkg
-          cd pkg && zip -r ../java-cooldown-animation.levipack . && cd ..
-          unzip -l java-cooldown-animation.levipack
+          unzip -q JavaCombatAnimation_Resources.zip -d pkg
+          test -f pkg/resources/minecraft_resource_packs/JavaCombatAnimation_RP/manifest.json
+          test -f pkg/resources/minecraft_behavior_packs/JavaCombatAnimation_BP/manifest.json
+          cd pkg && zip -qr ../java-combat-animation.levipack . && cd ..
+          unzip -l java-combat-animation.levipack | tail -n 5
 
       - uses: actions/upload-artifact@v4
         with:
-          name: java-cooldown-animation-levipack
-          path: java-cooldown-animation.levipack
+          name: java-combat-animation-levipack
+          path: java-combat-animation.levipack
 
       - name: Publish to a release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          files: java-cooldown-animation.levipack
+          tag_name: v1.2.${{ github.run_number }}
+          files: java-combat-animation.levipack
