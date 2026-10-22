@@ -1,8 +1,9 @@
 {
   "type": "preload-native",
-  "name": "Java Cooldown Animation",
+  "name": "Java Combat Animation",
   "author": "Chriel",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "entry": "libjava_cooldown_animation.so",
-  "minecraft_versions": []
+  "minecraft_versions": [],
+  "overwrite_folders": ["resources"]
 }
