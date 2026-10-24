@@ -52,9 +52,13 @@ jobs:
 
       - name: Package levipack
         run: |
-          RES="$(ls JavaCombatAnimation_Resources*.zip 2>/dev/null | head -n1)"
+          # Find the zip that holds the Java Combat Animation packs, whatever it is named
+          RES=""
+          for z in *.zip; do
+            if unzip -l "$z" 2>/dev/null | grep -q "JavaCombatAnimation_RP/manifest.json"; then RES="$z"; break; fi
+          done
           if [ -z "$RES" ]; then
-            echo "::error::No JavaCombatAnimation_Resources zip found in the repo. Files in the repo root:"
+            echo "::error::The Java Combat Animation resources zip was not found in the repo. Files in the repo root:"
             ls -la
             exit 1
           fi
