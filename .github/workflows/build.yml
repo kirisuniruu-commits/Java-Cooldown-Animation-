@@ -52,11 +52,17 @@ jobs:
 
       - name: Package levipack
         run: |
-          test -f JavaCombatAnimation_Resources.zip || { echo "::error::JavaCombatAnimation_Resources.zip is missing from the repo"; exit 1; }
+          RES="$(ls JavaCombatAnimation_Resources*.zip 2>/dev/null | head -n1)"
+          if [ -z "$RES" ]; then
+            echo "::error::No JavaCombatAnimation_Resources zip found in the repo. Files in the repo root:"
+            ls -la
+            exit 1
+          fi
+          echo "Using resources zip: $RES"
           mkdir -p pkg
           cp manifest.json pkg/
           cp build/android/out/$ABI/libjava_cooldown_animation.so pkg/
-          unzip -q JavaCombatAnimation_Resources.zip -d pkg
+          unzip -q "$RES" -d pkg
           test -f pkg/resources/minecraft_resource_packs/JavaCombatAnimation_RP/manifest.json
           test -f pkg/resources/minecraft_behavior_packs/JavaCombatAnimation_BP/manifest.json
           cd pkg && zip -qr ../java-combat-animation.levipack . && cd ..
